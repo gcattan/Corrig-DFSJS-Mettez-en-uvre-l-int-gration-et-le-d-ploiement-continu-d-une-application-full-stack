@@ -3,7 +3,7 @@
 # - Multi-stage build to reduce image size
 # - Alpine base image (smaller and more secure)
 # - Non-root user for security
-# - Layer optimization with npm ci
+# - Layer optimization with npm install
 # - Health check for container orchestration
 # - Only production dependencies in final image
 
@@ -17,7 +17,7 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install ALL dependencies (including devDependencies for build)
-RUN npm ci
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -45,7 +45,7 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install ONLY production dependencies
-RUN npm ci --only=production && \
+RUN npm install --only=production && \
     npm cache clean --force
 
 # Copy built artifacts from builder stage
