@@ -1,5 +1,5 @@
 import { PrismaClient, Contact } from '@prisma/client';
-import { CreateContactInput, UpdateContactInput } from '../models/schemas';
+import { CreateContactInput, UpdateContactInput } from '../models/contactModel';
 
 const prisma = new PrismaClient();
 

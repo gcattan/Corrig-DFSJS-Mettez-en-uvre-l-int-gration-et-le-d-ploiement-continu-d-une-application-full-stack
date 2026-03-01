@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { contactService } from '../services/api';
-import { CreateContactInput, UpdateContactInput } from '../types';
+import { contactService } from '../services/contactService';
+import type { CreateContactInput, UpdateContactInput } from '../types/contact';
 
 export const useContacts = () => {
   return useQuery({

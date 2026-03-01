@@ -1,5 +1,5 @@
 import { PrismaClient, Organization } from '@prisma/client';
-import { CreateOrganizationInput, UpdateOrganizationInput } from '../models/schemas';
+import { CreateOrganizationInput, UpdateOrganizationInput } from '../models/organizationModel';
 
 const prisma = new PrismaClient();
 

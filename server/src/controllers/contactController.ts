@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { contactService } from '../services/contactService';
-import { CreateContactSchema, UpdateContactSchema } from '../models/schemas';
+import { CreateContactSchema, UpdateContactSchema } from '../models/contactModel';
 
 export const contactController = {
-  async getAll(_req: Request, res: Response): Promise<void> {
+  async getAll(req: Request, res: Response): Promise<void> {
     try {
       const contacts = await contactService.getAllContacts();
       res.json(contacts);
-    } catch {
+    } catch (error) {
       res.status(500).json({ error: 'Failed to fetch contacts' });
     }
   },
@@ -31,7 +31,7 @@ export const contactController = {
       const validatedData = CreateContactSchema.parse(req.body);
       const contact = await contactService.createContact(validatedData);
       res.status(201).json(contact);
-    } catch {
+    } catch (error) {
       res.status(400).json({ error: 'Invalid input data' });
     }
   },
@@ -65,11 +65,11 @@ export const contactController = {
     }
   },
 
-  async getStats(_req: Request, res: Response): Promise<void> {
+  async getStats(req: Request, res: Response): Promise<void> {
     try {
       const stats = await contactService.getContactStats();
       res.json(stats);
-    } catch {
+    } catch (error) {
       res.status(500).json({ error: 'Failed to fetch stats' });
     }
   },

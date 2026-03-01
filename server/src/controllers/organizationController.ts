@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
 import { organizationService } from '../services/organizationService';
-import { CreateOrganizationSchema, UpdateOrganizationSchema } from '../models/schemas';
+import { CreateOrganizationSchema, UpdateOrganizationSchema } from '../models/organizationModel';
 
 export const organizationController = {
-  async getAll(_req: Request, res: Response): Promise<void> {
+  async getAll(req: Request, res: Response): Promise<void> {
     try {
       const organizations = await organizationService.getAllOrganizations();
       res.json(organizations);
-    } catch {
+    } catch (error) {
       res.status(500).json({ error: 'Failed to fetch organizations' });
     }
   },
@@ -31,7 +31,7 @@ export const organizationController = {
       const validatedData = CreateOrganizationSchema.parse(req.body);
       const organization = await organizationService.createOrganization(validatedData);
       res.status(201).json(organization);
-    } catch {
+    } catch (error) {
       res.status(400).json({ error: 'Invalid input data' });
     }
   },
@@ -65,11 +65,11 @@ export const organizationController = {
     }
   },
 
-  async getStats(_req: Request, res: Response): Promise<void> {
+  async getStats(req: Request, res: Response): Promise<void> {
     try {
       const stats = await organizationService.getOrganizationStats();
       res.json(stats);
-    } catch {
+    } catch (error) {
       res.status(500).json({ error: 'Failed to fetch stats' });
     }
   },

@@ -1,6 +1,6 @@
 import { Organization } from '@prisma/client';
 import { organizationRepository } from '../repositories/organizationRepository';
-import { CreateOrganizationInput, UpdateOrganizationInput } from '../models/schemas';
+import { CreateOrganizationInput, UpdateOrganizationInput } from '../models/organizationModel';
 
 export const organizationService = {
   async getAllOrganizations(): Promise<Organization[]> {
