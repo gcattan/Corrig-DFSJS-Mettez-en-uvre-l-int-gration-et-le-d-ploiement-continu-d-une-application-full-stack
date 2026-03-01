@@ -1,0 +1,98 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install backend dependencies
+        working-directory: ./server
+        run: npm ci
+
+      - name: Build backend
+        working-directory: ./server
+        run: |
+          npx prisma generate
+          npm run build
+
+      - name: Install frontend dependencies
+        working-directory: ./client
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: ./client
+        run: npm run build
+
+      - name: Archive backend build
+        run: |
+          cd server
+          tar -czf ../backend-build.tar.gz dist/ node_modules/.prisma/ package.json package-lock.json
+
+      - name: Archive frontend build
+        run: |
+          cd client
+          tar -czf ../frontend-build.tar.gz dist/
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          PREVIOUS_TAG=$(git describe --abbrev=0 --tags $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
+          if [ -z "$PREVIOUS_TAG" ]; then
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" ${{ github.ref_name }})
+          else
+            CHANGELOG=$(git log --pretty=format:"- %s (%h)" ${PREVIOUS_TAG}..${{ github.ref_name }})
+          fi
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## Changes in this Release
+
+            ${{ steps.changelog.outputs.changelog }}
+
+            ## Installation
+
+            ### Using Docker
+            ```bash
+            docker pull ghcr.io/${{ github.repository }}/backend:${{ github.ref_name }}
+            docker pull ghcr.io/${{ github.repository }}/frontend:${{ github.ref_name }}
+            ```
+
+            ### Using Build Artifacts
+            Download the build artifacts below and deploy to your server.
+
+            ---
+
+            🤖 Generated with [GitHub Actions](https://github.com/features/actions)
+          files: |
+            backend-build.tar.gz
+            frontend-build.tar.gz
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
