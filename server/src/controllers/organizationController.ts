@@ -3,7 +3,7 @@ import { organizationService } from '../services/organizationService';
 import { CreateOrganizationSchema, UpdateOrganizationSchema } from '../models/organizationModel';
 
 export const organizationController = {
-  async getAll(req: Request, res: Response): Promise<void> {
+  async getAll(_req: Request, res: Response): Promise<void> {
     try {
       const organizations = await organizationService.getAllOrganizations();
       res.json(organizations);
@@ -65,7 +65,7 @@ export const organizationController = {
     }
   },
 
-  async getStats(req: Request, res: Response): Promise<void> {
+  async getStats(_req: Request, res: Response): Promise<void> {
     try {
       const stats = await organizationService.getOrganizationStats();
       res.json(stats);
