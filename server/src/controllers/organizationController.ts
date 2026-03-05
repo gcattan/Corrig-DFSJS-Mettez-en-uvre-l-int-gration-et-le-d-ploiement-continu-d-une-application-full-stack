@@ -7,7 +7,7 @@ export const organizationController = {
     try {
       const organizations = await organizationService.getAllOrganizations();
       res.json(organizations);
-    } catch (error) {
+    } catch (_error) {
       res.status(500).json({ error: 'Failed to fetch organizations' });
     }
   },
@@ -31,7 +31,7 @@ export const organizationController = {
       const validatedData = CreateOrganizationSchema.parse(req.body);
       const organization = await organizationService.createOrganization(validatedData);
       res.status(201).json(organization);
-    } catch (error) {
+    } catch (_error) {
       res.status(400).json({ error: 'Invalid input data' });
     }
   },
@@ -69,7 +69,7 @@ export const organizationController = {
     try {
       const stats = await organizationService.getOrganizationStats();
       res.json(stats);
-    } catch (error) {
+    } catch (_error) {
       res.status(500).json({ error: 'Failed to fetch stats' });
     }
   },

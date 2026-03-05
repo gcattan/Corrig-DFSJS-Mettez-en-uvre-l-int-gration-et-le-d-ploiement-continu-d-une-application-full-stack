@@ -7,7 +7,7 @@ export const contactController = {
     try {
       const contacts = await contactService.getAllContacts();
       res.json(contacts);
-    } catch (error) {
+    } catch (_error) {
       res.status(500).json({ error: 'Failed to fetch contacts' });
     }
   },
@@ -31,7 +31,7 @@ export const contactController = {
       const validatedData = CreateContactSchema.parse(req.body);
       const contact = await contactService.createContact(validatedData);
       res.status(201).json(contact);
-    } catch (error) {
+    } catch (_error) {
       res.status(400).json({ error: 'Invalid input data' });
     }
   },
@@ -69,7 +69,7 @@ export const contactController = {
     try {
       const stats = await contactService.getContactStats();
       res.json(stats);
-    } catch (error) {
+    } catch (_error) {
       res.status(500).json({ error: 'Failed to fetch stats' });
     }
   },
